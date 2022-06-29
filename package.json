@@ -1,0 +1,16 @@
+{
+  "name": "musicis-rest",
+  "version": "1.0.0",
+  "description": "Backend for my  Musicis Galaxia React App",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "author": "Jordan Liubenov",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.18"
+  }
+}
