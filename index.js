@@ -8,9 +8,13 @@ const connectToDb = require("./configurations/dbConnection");
 
 const settings = require("./configurations/settings");
 
-const main = async () => {
+app.get("/catalog", (req, res) => {
+	console.log("working on catalog");
+});
+
+const main = () => {
 	try {
-		await connectToDb();
+		connectToDb();
 		app.listen(settings.port, () =>
 			console.log(`Server is live on port ${settings.port}`)
 		);
