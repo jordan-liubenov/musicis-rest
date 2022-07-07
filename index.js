@@ -20,15 +20,14 @@ const main = () => {
   try {
     connectToDb();
     app.listen(settings.port, () =>
-      console.log(`Server is live on port ${settings.port}`)
+      console.log(`<>>> Server is live on port ${settings.port} <<<>`)
     );
   } catch (error) {
-    console.log(`DB Error: ${error}`);
+    console.log(`!!! DB Error: ${error} !!!`);
   }
 
   app.use(cors());
-  
-  
+
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 

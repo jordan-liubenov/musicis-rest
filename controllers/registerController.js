@@ -1,16 +1,23 @@
 const User = require("../models/User");
 
+const register = require("../services/userService");
+
 const router = require("express").Router();
 
-
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const email = req.body.email;
   const username = req.body.user;
   const password = req.body.pass;
 
-  const newUser = { email, username, password };
+  try {
+    const newUser = { email, username, password };
 
-  //TO-DO: create a new User entry in the DB
+    await register(req);
+
+    res.sendStatus(201);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = router;
