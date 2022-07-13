@@ -9,15 +9,18 @@ const SALT_ROUNDS = settings.saltRounds;
 
 const validateEmail = (email) => {
   let isValid = false;
+
+  let reg = /^[A-Za-z\d]+[@][A-Za-z]+.[a-z]+$/g;
   if (email.length > 0) {
-    //if length is above 0, check for other requirements
-    if (email.includes("@") && email.includes(".")) {
-      //if it includes both symols return true
+    if (reg.test(email)) {
       isValid = true;
     } else {
       isValid = false;
     }
+  } else {
+    isValid = true;
   }
+
   return isValid;
 };
 
