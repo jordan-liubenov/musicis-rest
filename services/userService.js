@@ -26,7 +26,7 @@ const validateEmail = (email) => {
 
 const validateUsername = (username) => {
   let isValid = false;
-  if (username.length < 6 && username.length > 0) {
+  if (username.length >= 6) {
     //if length is correct, return true
     isValid = true;
   } else {
@@ -37,7 +37,7 @@ const validateUsername = (username) => {
 
 const validatePassword = (password) => {
   let isValid = false;
-  if (password.length < 8) {
+  if (password.length >= 8) {
     if (checkForNumber(password) && checkForUpper(password)) {
       //if it has atleast one Num, and one Uppercase char, return true
       isValid = true;
@@ -70,36 +70,40 @@ const register = async (req) => {
   const password = req.body.pass;
   const rePass = req.body.rePass;
 
-  // const validationResult = validate(email, username, password);
-  // if (!validationResult) {
-  //   //TO-DO: Add error to be returned so it can be send to the front end and displayed to the user
-  //   return;
-  // }
+  const validationResult = validate(email, username, password);
+  if (!validationResult) {
+    //TO-DO: Add error to be returned so it can be send to the front end and displayed to the user
+    console.log("one of the fields was not validated");
+    return;
+  }
 
-  // if (password != rePass) {
-  //   //TO-DO: Add error to be returned in case of non-matching passwords
-  //   return;
-  // }
+  if (password != rePass) {
+    //TO-DO: Add error to be returned in case of non-matching passwords
+    console.log("passwords dont match");
+    return;
+  }
 
   // //if everything is valid, continue register operation
 
-  // const usernameQuery = {
-  //   username: username,
-  // };
-  // const findUser = await User.findOne(usernameQuery); // check if there is an existing user
-  // if (findUser != null) {
-  //   //TO-DO: Add error to be returned in case of existing user
-  //   return;
-  // }
+  const usernameQuery = {
+    username: username,
+  };
+  const findUser = await User.findOne(usernameQuery); // check if there is an existing user
+  if (findUser != null) {
+    //TO-DO: Add error to be returned in case of existing user
+    console.log("user with username already exists");
+    return;
+  }
 
-  // const emailQuery = {
-  //   email: email,
-  // };
-  // const findByEmail = await User.findOne(emailQuery);
-  // if (findByEmail != null) {
-  //   //TO-DO: add error for existing user again
-  //   return;
-  // }
+  const emailQuery = {
+    email: email,
+  };
+  const findByEmail = await User.findOne(emailQuery);
+  if (findByEmail != null) {
+    //TO-DO: add error for existing user again
+    console.log("user with this email already exists");
+    return;
+  }
 
   //if there is no existing user, continue with the registration  process
   try {
@@ -112,7 +116,7 @@ const register = async (req) => {
       password: hashedPassword,
     });
 
-    //await user.save(); - saves to MongoDB
+    await newUserEntry.save(); //saves to MongoDB
     console.log(newUserEntry);
   } catch (error) {
     console.log(error);
@@ -129,6 +133,7 @@ const login = async (req) => {
   const findUsername = await User.findOne(usernameQuery);
   if (findUsername == null) {
     //TO-DO: if Null, no such user exists, thus return an error
+    console.log("no such user exists");
     return;
   }
 
@@ -136,13 +141,14 @@ const login = async (req) => {
   const passwordCheck = await bcrypt.compare(password, findUsername.password);
   if (!passwordCheck) {
     //TO-DO: add error for wrong password
+    console.log("wrong password");
     return;
   }
 
   //if password is correct, return new jwt token
   return new Promise((resolve, reject) => {
     jwt.sign(
-      { _id: foundUser.id, username: foundUser.username },
+      { _id: findUsername.id, username: findUsername.username },
       settings.secret,
       { expiresIn: "5d" },
       (error, token) => {
@@ -178,4 +184,4 @@ function checkForUpper(string) {
   return hasUpper;
 }
 
-module.exports = register;
+module.exports = { register, login };

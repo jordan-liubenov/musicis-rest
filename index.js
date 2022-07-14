@@ -30,9 +30,8 @@ const main = () => {
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
+  app.use(cookieParser());
 
   app.use(routes);
-
-  app.use(cookieParser());
 };
 main();
