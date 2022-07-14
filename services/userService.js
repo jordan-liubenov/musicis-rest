@@ -10,7 +10,7 @@ const SALT_ROUNDS = settings.saltRounds;
 const validateEmail = (email) => {
   let isValid = false;
 
-  let reg = /^[A-Za-z\d]+[@][A-Za-z]+.[a-z]+$/g;
+  let reg = /^[A-Za-z\d]+[@][A-Za-z]+\.[a-z]+$/g;
   if (email.length > 0) {
     if (reg.test(email)) {
       isValid = true;

@@ -7,9 +7,9 @@ router.post("/", async (req, res) => {
   try {
     const token = await login(req);
 
-    //TO-DO: add error
+    //TODO: add error
     if (!token) {
-      //TO-DO add errors
+      //TODO add errors
       res.send("error");
       return;
     }
