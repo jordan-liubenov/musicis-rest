@@ -3,20 +3,31 @@ const settings = require("../configurations/settings");
 
 const router = require("express").Router();
 
+const jwt = require("jsonwebtoken");
+
 router.post("/", async (req, res) => {
   try {
-    const token = await login(req);
+    const username = req.body.user;
 
-    //TODO: add error
-    if (!token) {
-      //TODO add errors
-      res.send("error");
+    const result = await login(req); //if successful, will return json web token
+
+    if (!result) {
+      res.send(result);
       return;
     }
 
-    //if token is valid, send to user
-    // res.cookie(settings.sessionTitle, token, { httpOnly: true });
-    res.json({ token });
+    if (typeof result === "object") {
+      if (result.usernameErr) {
+        res.send({ error: result });
+      } else if (result.passwordErr) {
+        res.send({ error: result });
+      }
+
+      return;
+    } else {
+      jwt.verify(result, settings.secret);
+      res.json({ result, username });
+    }
   } catch (error) {
     console.log(error);
   }

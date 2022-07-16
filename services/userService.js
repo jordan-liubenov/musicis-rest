@@ -127,22 +127,23 @@ const login = async (req) => {
   const username = req.body.user;
   const password = req.body.pass;
 
+  if (username.length == 0 || password.length == 0) return;
+
   const usernameQuery = {
     username: username,
   };
   const findUsername = await User.findOne(usernameQuery);
   if (findUsername == null) {
-    //TO-DO: if Null, no such user exists, thus return an error
-    console.log("no such user exists");
-    return;
+    let errorObj = { usernameErr: true };
+    return errorObj;
   }
 
   //if user exists, continue and compare the passwords
   const passwordCheck = await bcrypt.compare(password, findUsername.password);
   if (!passwordCheck) {
     //TO-DO: add error for wrong password
-    console.log("wrong password");
-    return;
+    let errorObj = { passwordErr: true };
+    return errorObj;
   }
 
   //if password is correct, return new jwt token

@@ -1,10 +1,9 @@
-const User = require("../models/User");
-
 const { register } = require("../services/userService");
 
 const router = require("express").Router();
 
 router.post("/", async (req, res) => {
+  //TODO add error-sending from server to client like in login controler
   try {
     await register(req);
 
