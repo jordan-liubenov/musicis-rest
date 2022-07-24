@@ -3,11 +3,19 @@ const { register } = require("../services/userService");
 const router = require("express").Router();
 
 router.post("/", async (req, res) => {
-  //TODO add error-sending from server to client like in login controler
   try {
-    await register(req);
-
-    res.send({ msg: "All good chief" });
+    const result = await register(req);
+    if (typeof result === "object") {
+      if (result.usernameTaken) {
+        res.send({ error: result });
+      } else if (result.emailTaken) {
+        res.send({ error: result });
+      }
+      return;
+    } else if (result) {
+      res.send({ msg: "All good chief" });
+      console.log(`ye`);
+    }
   } catch (error) {
     console.log(error);
   }

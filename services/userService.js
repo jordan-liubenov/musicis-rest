@@ -78,8 +78,6 @@ const register = async (req) => {
   }
 
   if (password != rePass) {
-    //TO-DO: Add error to be returned in case of non-matching passwords
-    console.log("passwords dont match");
     return;
   }
 
@@ -90,9 +88,10 @@ const register = async (req) => {
   };
   const findUser = await User.findOne(usernameQuery); // check if there is an existing user
   if (findUser != null) {
-    //TO-DO: Add error to be returned in case of existing user
-    console.log("user with username already exists");
-    return;
+    const errorObj = {
+      usernameTaken: true,
+    };
+    return errorObj;
   }
 
   const emailQuery = {
@@ -100,9 +99,10 @@ const register = async (req) => {
   };
   const findByEmail = await User.findOne(emailQuery);
   if (findByEmail != null) {
-    //TO-DO: add error for existing user again
-    console.log("user with this email already exists");
-    return;
+    const errorObj = {
+      emailTaken: true,
+    };
+    return errorObj;
   }
 
   //if there is no existing user, continue with the registration  process
@@ -118,6 +118,7 @@ const register = async (req) => {
 
     await newUserEntry.save(); //saves to MongoDB
     console.log(newUserEntry);
+    return true;
   } catch (error) {
     console.log(error);
   }
