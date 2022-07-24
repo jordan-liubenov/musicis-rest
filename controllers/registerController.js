@@ -12,10 +12,7 @@ router.post("/", async (req, res) => {
         res.send({ error: result });
       }
       return;
-    } else if (result) {
-      res.send({ msg: "All good chief" });
-      console.log(`ye`);
-    }
+    } 
   } catch (error) {
     console.log(error);
   }
