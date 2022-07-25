@@ -1,4 +1,4 @@
-const { register } = require("../services/userService");
+const { register, getCurrentUserId } = require("../services/userService");
 
 const router = require("express").Router();
 
@@ -12,10 +12,11 @@ router.post("/", async (req, res) => {
         res.send({ error: result });
       }
       return;
-    } 
+    }
   } catch (error) {
     console.log(error);
   }
 });
+
 
 module.exports = router;

@@ -186,4 +186,18 @@ function checkForUpper(string) {
   return hasUpper;
 }
 
-module.exports = { register, login };
+const getCurrentUserId = async (username) => {
+
+  const usernameQuery = {
+    username,
+  };
+
+  try {
+    const findUser = await User.findOne(usernameQuery);
+    return findUser;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = { register, login, getCurrentUserId };
