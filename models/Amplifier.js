@@ -10,7 +10,7 @@ const amplifierSchema = mongoose.Schema({
     required: true,
   },
   wattage: {
-    type: Number,
+    type: String,
     required: true,
   },
   condition: {
@@ -26,7 +26,7 @@ const amplifierSchema = mongoose.Schema({
     required: true,
   },
   price: {
-    type: Number,
+    type: String,
     required: true,
   },
 });
