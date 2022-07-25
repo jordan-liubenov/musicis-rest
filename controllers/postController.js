@@ -13,7 +13,11 @@ router.post("/", async (req, res) => {
     if (err) res.json({ error: err });
     if (decode) res.json({ success: decode });
   });
-  await createNewOffer(req);
+  try {
+    await createNewOffer(req);
+  } catch (error) {
+    console.log();
+  }
 });
 
 module.exports = router;
