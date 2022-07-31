@@ -5,6 +5,7 @@ const Other = require("../models/Other");
 const createNewOffer = async (req) => {
   const offerType = setOfferType(req);
   let validate = validator(offerType, req);
+
   //if object body doesn't pass validation, don't send request
   if (!validate) return;
 
@@ -22,7 +23,32 @@ const createNewOffer = async (req) => {
       newDocument = new Other(documentBody);
       break;
   }
+
   await newDocument.save();
+};
+
+const fetchAllBySpecificUser = async (id) => {
+  /*
+  Use user Id as search query through each of the collections
+  Amps, Instruments, Other
+  after each document search
+  check if anything was found, if yes - save documents in array and prepare them to send as request response
+*/
+
+  let resultArray = [];
+  const ownerIdQuery = {
+    ownerId: id,
+  };
+
+  let findOther = await Other.findOne(ownerIdQuery).lean();
+  let findInstrument = await Instrument.findOne(ownerIdQuery).lean();
+  let findAmp = await Amplifier.findOne(ownerIdQuery).lean();
+
+  if (findOther != null) resultArray.push(findOther);
+  if (findInstrument != null) resultArray.push(findInstrument);
+  if (findAmp != null) resultArray.push(findAmp);
+
+  return resultArray;
 };
 
 function setOfferType(req) {
@@ -125,16 +151,19 @@ function createNewDocumentBody(req, offerType) {
 
   if (offerType == "other") {
     documentBody.description = req.body.description;
+    documentBody.type = "Other";
   } else if (offerType == "instrument") {
     documentBody.description = req.body.description;
     documentBody.condition = req.body.condition;
+    documentBody.type = "Instrument";
   } else if (offerType == "amp") {
     documentBody.wattage = req.body.wattage;
     documentBody.valves = req.body.valves;
     documentBody.condition = req.body.condition;
+    documentBody.type = "Amplifier";
   }
 
   return documentBody;
 }
 
-module.exports = { createNewOffer };
+module.exports = { createNewOffer, fetchAllBySpecificUser };

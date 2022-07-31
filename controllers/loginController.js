@@ -11,8 +11,10 @@ router.post("/", async (req, res) => {
 
     const foundUser = await getCurrentUserId(username);
     let id;
+    let email;
     if (foundUser) {
       id = foundUser._id;
+      email = foundUser.email;
     }
 
     const result = await login(req); //if successful, will return json web token
@@ -29,9 +31,10 @@ router.post("/", async (req, res) => {
       }
       return;
     } else {
+      //upon success, send token and user data 
       jwt.verify(result, settings.secret, (err) => {
         if (err) return res.json({ error: err });
-        res.json({ result, username, id });
+        res.json({ result, username, id, email });
       });
     }
   } catch (error) {
