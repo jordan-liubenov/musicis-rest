@@ -40,9 +40,9 @@ const fetchAllBySpecificUser = async (id) => {
     ownerId: id,
   };
 
-  let findOther = await Other.findOne(ownerIdQuery).lean();
-  let findInstrument = await Instrument.findOne(ownerIdQuery).lean();
-  let findAmp = await Amplifier.findOne(ownerIdQuery).lean();
+  let findOther = await Other.find(ownerIdQuery).lean();
+  let findInstrument = await Instrument.find(ownerIdQuery).lean();
+  let findAmp = await Amplifier.find(ownerIdQuery).lean();
 
   if (findOther != null) resultArray.push(findOther);
   if (findInstrument != null) resultArray.push(findInstrument);
