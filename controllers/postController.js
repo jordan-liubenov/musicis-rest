@@ -13,6 +13,7 @@ const {
 router.post("/", async (req, res) => {
   let verified = false;
   const token = req.headers["x-auth-token"];
+
   jwt.verify(token, settings.secret, (err, decode) => {
     if (err) res.json({ error: err });
     if (decode) {

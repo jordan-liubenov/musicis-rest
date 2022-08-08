@@ -25,6 +25,20 @@ const otherSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  likes: {
+    type: Number,
+    required: true,
+  },
+  dislikes: {
+    type: Number,
+    required: true,
+  },
+  ratedBy: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 module.exports = mongoose.model("Other", otherSchema);

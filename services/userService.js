@@ -72,7 +72,6 @@ const register = async (req) => {
 
   const validationResult = validate(email, username, password);
   if (!validationResult) {
-    //TO-DO: Add error to be returned so it can be send to the front end and displayed to the user
     console.log("one of the fields was not validated");
     return;
   }
@@ -118,6 +117,7 @@ const register = async (req) => {
 
     await newUserEntry.save(); //saves to MongoDB
     console.log(newUserEntry);
+    console.log("--------------------");
     return true;
   } catch (error) {
     console.log(error);
@@ -187,13 +187,25 @@ function checkForUpper(string) {
 }
 
 const getCurrentUserId = async (username) => {
-
   const usernameQuery = {
     username,
   };
 
   try {
     const findUser = await User.findOne(usernameQuery);
+    return findUser;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const getUserById = async (id) => {
+  const idQuery = {
+    id,
+  };
+
+  try {
+    const findUser = await User.findOne(idQuery);
     return findUser;
   } catch (error) {
     console.log(error);

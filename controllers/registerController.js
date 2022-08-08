@@ -7,16 +7,17 @@ router.post("/", async (req, res) => {
     const result = await register(req);
     if (typeof result === "object") {
       if (result.usernameTaken) {
-        res.send({ error: result });
+        res.json({ error: result });
       } else if (result.emailTaken) {
-        res.send({ error: result });
+        res.json({ error: result });
       }
       return;
+    } else {
+      res.json({ msg: "Success" });
     }
   } catch (error) {
     console.log(error);
   }
 });
-
 
 module.exports = router;

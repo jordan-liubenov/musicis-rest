@@ -24,9 +24,42 @@ const createNewOffer = async (req) => {
       break;
   }
 
-  await newDocument.save();
+  /*
+    How to flag a request as an Edit request:
+    Add a boolean flag to the request body such as "editRequest.true"
+    if that property exists in the req.body, take the current Item's _id and find it in the DB
+    then find it and update it
+    lets go.
+  */
+
+  let currentOffer;
+  //if the sent request is an Edit request, find the already existing entry and update it's body
+  if (req.body.edit) {
+    currentOffer = req.body.currentOffer;
+    let currentOfferIdQuery = {
+      _id: currentOffer._id,
+    };
+
+    const findOther = await Other.findOne(currentOfferIdQuery);
+    const findInstrument = await Instrument.findOne(currentOfferIdQuery);
+    const findAmp = await Amplifier.findOne(currentOfferIdQuery);
+
+    if (findOther != null) {
+      delete req.body.currentOffer;
+      await Other.findByIdAndUpdate(currentOfferIdQuery, req.body);
+    } else if (findInstrument != null) {
+      delete req.body.currentOffer;
+      await Instrument.findByIdAndUpdate(currentOfferIdQuery, req.body);
+    } else if (findAmp != null) {
+      delete req.body.currentOffer;
+      await Amplifier.findByIdAndUpdate(currentOfferIdQuery, req.body);
+    }
+  } else {
+    await newDocument.save();
+  }
 };
 
+//--------Fetch functions---------
 const fetchAllBySpecificUser = async (id) => {
   /*
   Use user Id as search query through each of the collections
@@ -35,7 +68,7 @@ const fetchAllBySpecificUser = async (id) => {
   check if anything was found, if yes - save documents in array and prepare them to send as request response
 */
 
-  let resultArray = [];
+  const resultArray = [];
   const ownerIdQuery = {
     ownerId: id,
   };
@@ -51,6 +84,35 @@ const fetchAllBySpecificUser = async (id) => {
   return resultArray;
 };
 
+const fetchAllEntries = async () => {
+  //search through all entries in each collection and save them in array, which will then be sent to the client
+  const resultArray = [];
+
+  const findOther = await Other.find().lean();
+  const findInstrument = await Instrument.find().lean();
+  const findAmp = await Amplifier.find().lean();
+
+  //returns null only when findOne() is used, FIXME change if-else check to check if it returns an empty array (only returned from find())
+  if (findOther != null) resultArray.push(findOther);
+  if (findInstrument != null) resultArray.push(findInstrument);
+  if (findAmp != null) resultArray.push(findAmp);
+
+  return resultArray;
+};
+
+const fetchEntryById = async (id) => {
+  const idQuery = { _id: id };
+
+  const findOther = await Other.findOne(idQuery).lean();
+  const findInstrument = await Instrument.findOne(idQuery).lean();
+  const findAmp = await Amplifier.findOne(idQuery).lean();
+
+  if (findOther != null) return findOther;
+  if (findInstrument != null) return findInstrument;
+  if (findAmp != null) return findAmp;
+};
+
+//-----utility functions-----
 function setOfferType(req) {
   if (req.body.otherForm) return "other";
   if (req.body.instrumentForm) return "instrument";
@@ -149,6 +211,10 @@ function createNewDocumentBody(req, offerType) {
   documentBody.price = req.body.price;
   documentBody.imageUrl = req.body.imageUrl;
 
+  documentBody.likes = 0;
+  documentBody.dislikes = 0;
+  documentBody.comments = [];
+
   if (offerType == "other") {
     documentBody.description = req.body.description;
     documentBody.type = "Other";
@@ -166,4 +232,9 @@ function createNewDocumentBody(req, offerType) {
   return documentBody;
 }
 
-module.exports = { createNewOffer, fetchAllBySpecificUser };
+module.exports = {
+  createNewOffer,
+  fetchAllBySpecificUser,
+  fetchAllEntries,
+  fetchEntryById,
+};
