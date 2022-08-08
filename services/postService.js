@@ -2,6 +2,7 @@ const Instrument = require("../models/Instrument");
 const Amplifier = require("../models/Amplifier");
 const Other = require("../models/Other");
 
+//-----Create and Delete functions----
 const createNewOffer = async (req) => {
   const offerType = setOfferType(req);
   let validate = validator(offerType, req);
@@ -29,12 +30,11 @@ const createNewOffer = async (req) => {
     Add a boolean flag to the request body such as "editRequest.true"
     if that property exists in the req.body, take the current Item's _id and find it in the DB
     then find it and update it
-    lets go.
   */
 
   let currentOffer;
-  //if the sent request is an Edit request, find the already existing entry and update it's body
   if (req.body.edit) {
+    //if the sent request is an Edit request, find the already existing entry and update it's body
     currentOffer = req.body.currentOffer;
     let currentOfferIdQuery = {
       _id: currentOffer._id,
@@ -56,6 +56,26 @@ const createNewOffer = async (req) => {
     }
   } else {
     await newDocument.save();
+  }
+};
+
+//---Delete request----
+const deleteEntry = async (req) => {
+  const currentEntry = req.body;
+  const idQuery = {
+    _id: currentEntry._id,
+  };
+
+  switch (currentEntry.type) {
+    case "Instrument":
+      await Instrument.findOneAndDelete(idQuery);
+      break;
+    case "Amplifier":
+      await Amplifier.findOneAndDelete(idQuery);
+      break;
+    case "Other":
+      await Other.findOneAndDelete(idQuery);
+      break;
   }
 };
 
@@ -234,6 +254,7 @@ function createNewDocumentBody(req, offerType) {
 
 module.exports = {
   createNewOffer,
+  deleteEntry,
   fetchAllBySpecificUser,
   fetchAllEntries,
   fetchEntryById,
