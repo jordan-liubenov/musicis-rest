@@ -227,6 +227,8 @@ function createNewDocumentBody(req, offerType) {
   let documentBody = {};
 
   documentBody.ownerId = req.body.ownerId;
+  documentBody.ownerUsername = req.body.ownerUsername;
+
   documentBody.productName = req.body.productName;
   documentBody.price = req.body.price;
   documentBody.imageUrl = req.body.imageUrl;

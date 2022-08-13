@@ -32,6 +32,8 @@ const addRating = async (req) => {
       await Instrument.findByIdAndUpdate(idQuery, { likes: currentRatings });
       await Instrument.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     } else if (ratingType == "dislike") {
+      currentRatedBy = findInstrument.ratedBy;
+      currentRatedBy.push(currentUserId);
       currentRatings = findInstrument.dislikes;
       currentRatings++;
       findInstrument.dislikes = currentRatings;
@@ -48,6 +50,8 @@ const addRating = async (req) => {
       await Amplifier.findByIdAndUpdate(idQuery, { likes: currentRatings });
       await Amplifier.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     } else if (ratingType == "dislike") {
+      currentRatedBy = findAmplifier.ratedBy;
+      currentRatedBy.push(currentUserId);
       currentRatings = findAmplifier.dislikes;
       currentRatings++;
       findAmplifier.dislikes = currentRatings;
@@ -64,6 +68,8 @@ const addRating = async (req) => {
       await Other.findByIdAndUpdate(idQuery, { likes: currentRatings });
       await Other.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     } else if (ratingType == "dislike") {
+      currentRatedBy = findOther.ratedBy;
+      currentRatedBy.push(currentUserId);
       currentRatings = findOther.dislikes;
       currentRatings++;
       findOther.dislikes = currentRatings;

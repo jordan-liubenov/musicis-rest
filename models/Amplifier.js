@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const amplifierSchema = mongoose.Schema({
+  ownerUsername: {
+    type: String,
+  },
   ownerId: {
     type: String,
     required: true,

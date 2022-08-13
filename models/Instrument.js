@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const instrumentSchema = mongoose.Schema({
+  ownerUsername: {
+    type: String,
+  },
   ownerId: {
     type: String,
     required: true,
@@ -33,9 +36,9 @@ const instrumentSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-  dislikes:{
+  dislikes: {
     type: Number,
-    required: true
+    required: true,
   },
   ratedBy: [
     {

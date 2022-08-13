@@ -201,7 +201,7 @@ const getCurrentUserId = async (username) => {
 
 const getUserById = async (id) => {
   const idQuery = {
-    id,
+    _id: id,
   };
 
   try {
@@ -212,4 +212,4 @@ const getUserById = async (id) => {
   }
 };
 
-module.exports = { register, login, getCurrentUserId };
+module.exports = { register, login, getCurrentUserId, getUserById };
