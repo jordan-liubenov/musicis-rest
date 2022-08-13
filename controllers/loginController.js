@@ -19,15 +19,15 @@ router.post("/", async (req, res) => {
 
     const result = await login(req); //if successful, will return json web token
     if (!result) {
-      res.send(result);
+      res.json(result);
       return;
     }
 
     if (typeof result === "object") {
       if (result.usernameErr) {
-        res.send({ error: result });
+        res.json({ error: result });
       } else if (result.passwordErr) {
-        res.send({ error: result });
+        res.json({ error: result });
       }
       return;
     } else {

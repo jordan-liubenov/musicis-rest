@@ -18,61 +18,74 @@ const addRating = async (req) => {
   const findAmplifier = await Amplifier.findById(idQuery).lean();
   const findOther = await Other.findById(idQuery).lean();
 
-  //FIXME reformat this atrocity
-
-  let currentRatings;
-  let currentRatedBy;
+  let currentRatings; //counter for the current likes or dislikes, depending on the type of rating being done in the request
+  let currentRatedBy; //array of user IDs that have rated the current post
   if (findInstrument != null) {
+    currentRatedBy = findInstrument.ratedBy;
     if (ratingType == "like") {
-      currentRatedBy = findInstrument.ratedBy;
       currentRatedBy.push(currentUserId);
+
       currentRatings = findInstrument.likes;
       currentRatings++;
+
       findInstrument.likes = currentRatings;
+
       await Instrument.findByIdAndUpdate(idQuery, { likes: currentRatings });
       await Instrument.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     } else if (ratingType == "dislike") {
-      currentRatedBy = findInstrument.ratedBy;
       currentRatedBy.push(currentUserId);
+
       currentRatings = findInstrument.dislikes;
       currentRatings++;
+
       findInstrument.dislikes = currentRatings;
+
       await Instrument.findByIdAndUpdate(idQuery, { dislikes: currentRatings });
       await Instrument.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     }
   } else if (findAmplifier != null) {
+    currentRatedBy = findAmplifier.ratedBy;
     if (ratingType == "like") {
-      currentRatedBy = findAmplifier.ratedBy;
       currentRatedBy.push(currentUserId);
+
       currentRatings = findAmplifier.likes;
       currentRatings++;
+
       findAmplifier.likes = currentRatings;
+
       await Amplifier.findByIdAndUpdate(idQuery, { likes: currentRatings });
       await Amplifier.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     } else if (ratingType == "dislike") {
-      currentRatedBy = findAmplifier.ratedBy;
       currentRatedBy.push(currentUserId);
+
       currentRatings = findAmplifier.dislikes;
       currentRatings++;
+
       findAmplifier.dislikes = currentRatings;
+
       await Amplifier.findByIdAndUpdate(idQuery, { dislikes: currentRatings });
       await Amplifier.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     }
   } else if (findOther != null) {
+    currentRatedBy = findOther.ratedBy;
     if (ratingType == "like") {
-      currentRatedBy = findOther.ratedBy;
       currentRatedBy.push(currentUserId);
+
       currentRatings = findOther.likes;
       currentRatings++;
+
       findOther.likes = currentRatings;
+
       await Other.findByIdAndUpdate(idQuery, { likes: currentRatings });
       await Other.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     } else if (ratingType == "dislike") {
-      currentRatedBy = findOther.ratedBy;
       currentRatedBy.push(currentUserId);
+
       currentRatings = findOther.dislikes;
       currentRatings++;
+
       findOther.dislikes = currentRatings;
+
       await Other.findByIdAndUpdate(idQuery, { dislikes: currentRatings });
       await Other.findByIdAndUpdate(idQuery, { ratedBy: currentRatedBy });
     }

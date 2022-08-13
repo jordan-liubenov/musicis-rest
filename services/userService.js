@@ -199,17 +199,4 @@ const getCurrentUserId = async (username) => {
   }
 };
 
-const getUserById = async (id) => {
-  const idQuery = {
-    _id: id,
-  };
-
-  try {
-    const findUser = await User.findOne(idQuery);
-    return findUser;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-module.exports = { register, login, getCurrentUserId, getUserById };
+module.exports = { register, login, getCurrentUserId };
